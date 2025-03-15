@@ -1,0 +1,339 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="min-h-screen text-gray-900 dark:text-white bg-cover bg-center bg-no-repeat" 
+     style="background-image: url('{% get_media_prefix %}images/inter-dash.jpg');">
+    <!-- Add a semi-transparent overlay -->
+    <div class="absolute inset-0 bg-black bg-opacity-50 dark:bg-opacity-70"></div>
+
+    <!-- Wrap all content in a relative container to appear above overlay -->
+    <div class="relative z-10">
+        <div class="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 sticky top-0 z-50">
+            <div class="w-[90%] mx-auto py-4">
+                <div class="flex items-center justify-between">
+                    <!-- Logo Section -->
+                    <div class="flex items-center space-x-8">
+                        <a class="hidden md:block" href="/dashboard">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" viewBox="0 0 24 24" 
+                                 class="hover:scale-105 transition-all duration-300 dark:text-white">
+                                <!-- Circuit Board Background -->
+                                <path d="M2 2h20v20H2V2z" fill="#1e293b" />
+                                <path d="M4 4h2v2H4V4zm4 0h2v2H8V4zm4 0h2v2h-2V4zm4 0h2v2h-2V4zm4 0h2v2h-2V4zM4 8h2v2H4V8zm4 0h2v2H8V8zm4 0h2v2h-2V8zm4 0h2v2h-2V8zm4 0h2v2h-2V8z" 
+                                      fill="#475569" />
+                                
+                                <!-- AI Face -->
+                                <path d="M8 12a4 4 0 108 0 4 4 0 00-8 0zm2 0a2 2 0 104 0 2 2 0 00-4 0z" 
+                                      fill="#60a5fa" />
+                                <circle cx="12" cy="12" r="1" fill="#1e293b" />
+                                
+                                <!-- Chat Bubbles -->
+                                <path d="M6 16a2 2 0 100 4 2 2 0 000-4z" fill="#34d399" />
+                                <path d="M18 16a2 2 0 100 4 2 2 0 000-4z" fill="#f472b6" />
+                                
+                                <!-- Connecting Lines -->
+                                <path d="M12 14v2M8 18h8" stroke="#94a3b8" stroke-width="0.5" />
+                                
+                                <!-- Pulse Effect -->
+                                <circle cx="12" cy="12" r="6" 
+                                        stroke="#60a5fa" 
+                                        stroke-width="0.5" 
+                                        fill="none">
+                                    <animate attributeName="r" 
+                                             values="6;7;6" 
+                                             dur="2s" 
+                                             repeatCount="indefinite" />
+                                    <animate attributeName="opacity" 
+                                             values="1;0.5;1" 
+                                             dur="2s" 
+                                             repeatCount="indefinite" />
+                                </circle>
+                            </svg>
+                        </a>
+                        <!-- Navigation -->
+                        <nav class="hidden md:flex items-center space-x-8 dark:text-gray-300">
+                            <a href="/dashboard" class="flex items-center space-x-2 text-indigo-600 dark:text-indigo-400 font-medium">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+                                </svg>
+                                <span>Dashboard</span>
+                            </a>
+                            <a href="/dashboard/howit" class="flex items-center space-x-2 text-gray-600 hover:text-indigo-600 transition-colors">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+                                </svg>
+                                <span>How it works?</span>
+                            </a>
+                        </nav>
+                    </div>
+
+                    <!-- Right Section -->
+                    <div class="flex items-center space-x-6">
+                        <!-- Mobile Menu Button -->
+                        <button class="md:hidden p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100">
+                            <span class="sr-only">Open menu</span>
+                            <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main content with increased glass effect -->
+        <div class="mx-5 md:mx-20 lg:mx-36 relative z-10">
+            <div class="absolute inset-0 bg-gradient-to-r from-blue-500/30 to-purple-500/30 blur-3xl"></div>
+            <div class="p-10 bg-gradient-to-br from-white/80 via-blue-100/50 to-indigo-100/80
+                        dark:from-gray-900/80 dark:via-blue-900/50 dark:to-indigo-900/80 
+                        backdrop-blur-xl rounded-lg shadow-xl mt-8 border border-white/20
+                        transition-all duration-300 ease-in-out
+                        hover:bg-gradient-to-tl hover:from-blue-100/80 hover:via-indigo-100/50 hover:to-white/80
+                        dark:hover:from-blue-900/80 dark:hover:via-indigo-900/50 dark:hover:to-gray-900/80
+                        hover:bg-[length:400%_400%]
+                        hover:shadow-2xl hover:scale-[1.01]
+                        hover:border-blue-300/50
+                        hover:animate-gradient
+                        relative z-20">
+                <h2 class="font-bold text-3xl text-white drop-shadow-lg mb-2">Dashboard</h2>
+                <h2 class="text-white font-semibold text-lg drop-shadow-lg">Create and start your AI Mockup Interview</h2>
+                
+                <!-- Add New Interview section -->
+                <div class="grid grid-cols-1 md:grid-cols-3 my-5">
+                    <div>
+                        <div onclick="document.getElementById('interview-modal').classList.remove('hidden')" 
+                             class="group p-10 rounded-lg border border-gray-200 
+                                     bg-white
+                                     hover:bg-blue-500
+                                     transition-all duration-300 ease-in-out 
+                                     cursor-pointer">
+                            <h2 class="text-xl text-center font-bold 
+                                      text-black
+                                      transition-colors duration-300
+                                      group-hover:text-white">+ Add New</h2>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="p-5 border rounded-lg border-yellow-300 bg-yellow-100">
+                    <h2 class="flex gap-2 items-center text-yellow-700 mb-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-lightbulb">
+                            <path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"></path>
+                            <path d="M9 18h6"></path>
+                            <path d="M10 22h4"></path>
+                        </svg>
+                        <strong>Interview Tips</strong>
+                    </h2>
+                    <div class="space-y-4 text-yellow-800">
+                        <div class="flex items-start gap-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" 
+                                 stroke="currentColor" stroke-width="2" class="mt-1 shrink-0">
+                                <path d="M23 12a11.05 11.05 0 0 0-22 0zm-5 0a6.05 6.05 0 0 1-12 0"/>
+                                <circle cx="12" cy="12" r="3"/>
+                            </svg>
+                            <p><span class="font-semibold">Stay Focused:</span> Maintain eye contact with the camera and speak clearly. 
+                               This helps create a more professional and engaging interview experience.</p>
+                        </div>
+                        
+                        <div class="flex items-start gap-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" 
+                                 stroke="currentColor" stroke-width="2" class="mt-1 shrink-0">
+                                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                                <line x1="16" y1="2" x2="16" y2="6"/>
+                                <line x1="8" y1="2" x2="8" y2="6"/>
+                                <line x1="3" y1="10" x2="21" y2="10"/>
+                            </svg>
+                            <p><span class="font-semibold">Take Your Time:</span> Don't rush your answers. It's okay to take a moment 
+                               to gather your thoughts before responding to each question.</p>
+                        </div>
+                        
+                        <div class="flex items-start gap-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" 
+                                 stroke="currentColor" stroke-width="2" class="mt-1 shrink-0">
+                                <path d="M12 20h9"/>
+                                <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+                            </svg>
+                            <p><span class="font-semibold">Structure Your Answers:</span> Use the STAR method (Situation, Task, Action, Result) 
+                               when applicable to provide clear, well-organized responses.</p>
+                        </div>
+                        
+                        <div class="flex items-start gap-3 text-yellow-900 bg-yellow-200/50 p-3 rounded-md">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" 
+                                 stroke="currentColor" stroke-width="2" class="mt-1 shrink-0">
+                                <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>
+                            </svg>
+                            <p class="font-medium">Remember: This is a practice session! Stay calm, be yourself, and use this opportunity 
+                               to improve your interviewing skills.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal Dialog -->
+        <div id="interview-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
+            <div role="dialog" 
+                 class="relative w-full max-w-2xl mx-4 
+                        gap-4 border bg-white dark:bg-gray-800 p-6 shadow-lg rounded-lg 
+                        transform transition-all duration-300 ease-out">
+                
+                <!-- Modal Header -->
+                <div class="flex flex-col space-y-1.5 text-center sm:text-left">
+                    <h2 class="font-semibold tracking-tight text-2xl dark:text-white">
+                        Tell us more about your job interviewing
+                    </h2>
+                </div>
+                
+                <!-- Modal Form -->
+                <form id="interviewForm" onsubmit="handleInterviewSubmit(event)">
+                    <div class="my-3">
+                        <h2 class="dark:text-gray-200">Add Details about your job position, job description and years of experience</h2>
+                        
+                        <div class="mt-7 my-3">
+                            <label class="text-black dark:text-white">Job Role/job Position</label>
+                            <input class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm 
+                                        ring-offset-background focus-visible:outline-none focus-visible:ring-2 
+                                        focus-visible:ring-ring focus-visible:ring-offset-2 mt-1
+                                        dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                                   placeholder="Ex. Full stack Developer" 
+                                   required>
+                        </div>
+                        
+                        <div class="my-5">
+                            <label class="text-black dark:text-white">Job Description/ Tech stack (In Short)</label>
+                            <textarea class="flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 
+                                           text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 
+                                           focus-visible:ring-ring focus-visible:ring-offset-2
+                                           dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                                     placeholder="Ex. React, Angular, Nodejs, Mysql, Nosql, Python" 
+                                     required></textarea>
+                        </div>
+                        
+                        <div class="my-5">
+                            <label class="text-black dark:text-white">Years of Experience</label>
+                            <input class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm 
+                                        ring-offset-background focus-visible:outline-none focus-visible:ring-2 
+                                        focus-visible:ring-ring focus-visible:ring-offset-2 mt-1
+                                        dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                                   placeholder="Ex. 5" 
+                                   max="50" 
+                                   required 
+                                   type="number">
+                        </div>
+                    </div>
+                    
+                    <!-- Form Buttons -->
+                    <div class="flex gap-5 justify-end">
+                        <button onclick="document.getElementById('interview-modal').classList.add('hidden')" 
+                                class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium 
+                                       ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 
+                                       focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none 
+                                       disabled:opacity-50 h-10 px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700"
+                                type="button">
+                            Cancel
+                        </button>
+                        <button id="submitButton"
+                                class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium 
+                                       ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 
+                                       focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none 
+                                       disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2 
+                                       gap-2"
+                                type="submit">
+                            <svg id="loadingSpinner" 
+                                 xmlns="http://www.w3.org/2000/svg" 
+                                 width="24" 
+                                 height="24" 
+                                 viewBox="0 0 24 24" 
+                                 fill="none" 
+                                 stroke="currentColor" 
+                                 stroke-width="2" 
+                                 stroke-linecap="round" 
+                                 stroke-linejoin="round" 
+                                 class="lucide lucide-loader-circle animate-spin hidden">
+                                <path d="M21 12a9 9 0 1 1-6.219-8.56"></path>
+                            </svg>
+                            <span>Start Interview</span>
+                        </button>
+                    </div>
+                </form>
+                
+                <!-- Close Button -->
+                <button onclick="document.getElementById('interview-modal').classList.add('hidden')"
+                        type="button" 
+                        class="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background 
+                               transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 
+                               focus:ring-ring focus:ring-offset-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" 
+                         fill="none" stroke="currentColor" stroke-width="2" 
+                         class="h-4 w-4 dark:text-white">
+                        <path d="M18 6 6 18"></path>
+                        <path d="m6 6 12 12"></path>
+                    </svg>
+                    <span class="sr-only">Close</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    async function handleInterviewSubmit(event) {
+        event.preventDefault();
+        
+        const form = event.target;
+        const submitButton = form.querySelector('button[type="submit"]');
+        const loadingSpinner = document.getElementById('loadingSpinner');
+        const buttonText = submitButton.querySelector('span');
+        
+        // Disable button and show loading state
+        submitButton.disabled = true;
+        loadingSpinner.classList.remove('hidden');
+        buttonText.textContent = 'Generating From AI';
+        
+        try {
+            const response = await fetch('/api/create-interview/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCookie('csrftoken')
+                },
+                body: JSON.stringify({
+                    jobPosition: form.querySelector('input[placeholder="Ex. Full stack Developer"]').value,
+                    jobDesc: form.querySelector('textarea').value,
+                    jobExperience: form.querySelector('input[type="number"]').value
+                })
+            });
+            
+            const data = await response.json();
+            
+            if (data.success) {
+                window.location.href = `/interview/${data.mockId}/`;
+            } else {
+                alert('Failed to generate interview: ' + data.error);
+            }
+        } catch (error) {
+            alert('An error occurred: ' + error.message);
+        } finally {
+            submitButton.disabled = false;
+            loadingSpinner.classList.add('hidden');
+            buttonText.textContent = 'Start Interview';
+        }
+    }
+
+    // Function to get CSRF token from cookies
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+</script>
+{% endblock %} 

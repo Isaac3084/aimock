@@ -1,0 +1,1057 @@
+{% extends 'base.html' %}
+
+{% block content %}
+{% csrf_token %}
+<div class="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <!-- Header -->
+    <div class="bg-secondary shadow-sm">
+        <div class="w-[80%] m-auto flex gap-4 items-center justify-between">
+            <a class="hidden md:block" href="/dashboard">
+               
+            </a>
+            <ul class="hidden md:flex gap-6">
+                <a href="/dashboard">
+                    <li class="hover:text-black hover:font-bold transition-all cursor-pointer">Dashboard</li>
+                </a>
+                <a href="/dashboard/upgrade">
+                    <li class="hover:text-black hover:font-bold transition-all cursor-pointer">Upgrade</li>
+                </a>
+                <a href="/dashboard/howit">
+                    <li class="hover:text-black hover:font-bold transition-all cursor-pointer">How it works?</li>
+                </a>
+            </ul>
+            <div class="flex gap-10">
+                <button class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium 
+                             ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 
+                             focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none 
+                             disabled:opacity-50 border border-input bg-background hover:bg-accent 
+                             hover:text-accent-foreground h-10 w-10" 
+                        type="button">
+                    <span class="sr-only">Toggle theme</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="mx-5 md:mx-20 lg:mx-36">
+        <div>
+            <div class="grid grid-cols-1 md:grid-cols-2 my-10">
+                <!-- Questions Section -->
+                <div class="flex flex-col justify-between p-5 border rounded-lg my-1 bg-secondary">
+                    <!-- Question Navigation -->
+                    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
+                        {% for question in questions %}
+                        <h2 class="p-2 rounded-full text-center text-xs md:text-sm cursor-pointer md:block 
+                                 {% if forloop.counter == 1 %}bg-black text-white{% else %}bg-secondary{% endif %}">
+                            Question #{{ forloop.counter }}
+                        </h2>
+                        {% endfor %}
+                    </div>
+
+                    <!-- Current Question -->
+                    <div class="my-8 p-6 bg-white/90 dark:bg-gray-800/90 rounded-lg shadow-sm border border-gray-200/50">
+                        <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">Current Question:</h3>
+                        <h2 id="currentQuestion" class="text-lg md:text-xl font-medium text-gray-900 dark:text-white leading-relaxed">
+                            {{ questions.0.Question }}
+                        </h2>
+                    </div>
+
+                    <!-- Audio Control -->
+                    
+
+                    <!-- Information Box -->
+                    <div class="border rounded-lg p-5 bg-blue-100 mt-18 md:block hidden">
+                        <h2 class="flex gap-2 items-center text-blue-800">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" 
+                                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" 
+                                 stroke-linejoin="round" class="lucide lucide-lightbulb">
+                                <path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"></path>
+                                <path d="M9 18h6"></path>
+                                <path d="M10 22h4"></path>
+                            </svg>
+                            <strong>Note:</strong>
+                        </h2>
+                        <h2 class="text-sm text-blue-600 my-2">
+                            Speak clearly and take your time to provide a complete answer. 
+                            Your response will be evaluated based on accuracy, clarity, and depth of understanding.
+                        </h2>
+                    </div>
+
+                    <!-- Transcription Box -->
+                    <div id="transcriptionBox" class="mt-4 p-4 border rounded-lg w-full bg-gray-50 hidden">
+                        <h3 class="font-semibold text-lg mb-2">Your Answer:</h3>
+                        <p id="transcriptionText" class="text-gray-700">
+                            <span class="text-gray-900"></span>
+                            <span class="text-gray-400"></span>
+                        </p>
+                    </div>
+
+                    <!-- All Questions Modal -->
+                    <div id="allQuestionsModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm hidden z-50">
+                        <div class="min-h-screen flex items-center justify-center p-4">
+                            <div class="bg-white dark:bg-gray-800 rounded-xl max-w-4xl w-full max-h-[80vh] overflow-y-auto">
+                                <!-- Modal Header -->
+                                <div class="p-6 border-b border-gray-200 dark:border-gray-700 sticky top-0 bg-white dark:bg-gray-800 z-10">
+                                    <div class="flex justify-between items-center">
+                                        <h3 class="text-xl font-semibold">Interview Questions</h3>
+                                        <button onclick="closeQuestionsModal()" class="text-gray-500 hover:text-gray-700">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" 
+                                                 fill="none" stroke="currentColor" stroke-width="2">
+                                                <path d="M18 6L6 18"></path>
+                                                <path d="M6 6l12 12"></path>
+                                            </svg>
+                                        </button>
+                                    </div>
+                                </div>
+                                
+                                <!-- Modal Content -->
+                                <div class="p-6">
+                                    <div class="space-y-6">
+                                        {% for question in questions %}
+                                        <div class="p-4 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
+                                            <h4 class="font-medium text-lg mb-2 flex items-center justify-between">
+                                                <span>Question {{ forloop.counter }}</span>
+                                                {% if forloop.counter == currentQuestionIndex|add:1 %}
+                                                <span class="text-sm px-3 py-1 bg-blue-100 text-blue-700 rounded-full">Current</span>
+                                                {% endif %}
+                                            </h4>
+                                            <p class="text-gray-600 dark:text-gray-300">{{ question.Question }}</p>
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Navigation Buttons -->
+                    <div class="flex justify-between mt-6">
+                        <button id="prevButton" 
+                                class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm 
+                                       font-medium ring-offset-background transition-colors focus-visible:outline-none 
+                                       focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 
+                                       disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground 
+                                       hover:bg-primary/90 h-10 px-4 py-2 gap-2 disabled:bg-gray-300"
+                                {% if currentQuestionIndex == 0 %}disabled{% endif %}>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" 
+                                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" 
+                                 stroke-linejoin="round">
+                                <path d="m15 18-6-6 6-6"/>
+                            </svg>
+                            Previous
+                        </button>
+                        
+                        <!-- View All Questions Button -->
+                        <button onclick="showAllQuestions()" 
+                                class="inline-flex items-center justify-center px-4 py-2 text-sm font-medium
+                                       text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm
+                                       hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2
+                                       focus:ring-blue-500">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" 
+                                 fill="none" stroke="currentColor" stroke-width="2" class="mr-2">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                                <path d="M14 2v6h6"/>
+                                <path d="M16 13H8"/>
+                                <path d="M16 17H8"/>
+                                <path d="M10 9H8"/>
+                            </svg>
+                            View All Questions
+                        </button>
+
+                        <button id="nextButton" 
+                                class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm 
+                                       font-medium ring-offset-background transition-colors focus-visible:outline-none 
+                                       focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 
+                                       disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground 
+                                       hover:bg-primary/90 h-10 px-4 py-2 gap-2">
+                            Next
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" 
+                                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" 
+                                 stroke-linejoin="round">
+                                <path d="m9 18 6-6-6-6"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Webcam Section -->
+                <div class="flex flex-col items-center justify-center overflow-hidden">
+                    <div class="flex flex-col justify-center items-center rounded-lg p-5 bg-black mt-4 w-[30rem]">
+                        <div class="flex items-center justify-center p-10">
+                            <div class="relative">
+                                <video id="webcamVideo" 
+                                       autoplay 
+                                       playsinline 
+                                       muted
+                                       height="300" 
+                                       width="300" 
+                                       class="rounded-lg border"
+                                       style="transform: rotateY(180deg);">
+                                </video>
+                                <canvas id="faceOverlay" 
+                                        class="absolute top-0 left-0 w-full h-full"
+                                        style="transform: rotateY(180deg);">
+                                </canvas>
+                                <img alt="camera placeholder" 
+                                     src="/media/images/camera.jpg"
+                                     class="opacity-50 hidden" 
+                                     id="placeholderImage"
+                                     width="200" 
+                                     height="200">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Camera Controls -->
+                    <div class="md:flex mt-4 md:mt-8 md:gap-5">
+                        <!-- Webcam button -->
+                        <button onclick="toggleWebcam()" id="webcamButton" 
+                                class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm 
+                                       font-medium ring-offset-background transition-colors focus-visible:outline-none 
+                                       focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 
+                                       disabled:pointer-events-none disabled:opacity-50 border border-input 
+                                       bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 
+                                       my-4 md:my-0 mx-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" 
+                                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" 
+                                 stroke-linejoin="round" class="mr-2">
+                                <path d="M23 7l-7 5 7 5V7z"></path>
+                                <rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect>
+                            </svg>
+                            <span>Disable Camera</span>
+                        </button>
+
+                        <!-- Recording Button -->
+                        <button id="recordButton" class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm 
+                                       font-medium ring-offset-background transition-colors focus-visible:outline-none 
+                                       focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 
+                                       disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground 
+                               hover:bg-primary/90 h-10 px-4 py-2 my-4 md:my-0" onclick="manualToggleRecording()">
+                            <span class="flex gap-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" 
+                                     fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" 
+                                     stroke-linejoin="round" class="lucide lucide-mic">
+                                    <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"></path>
+                                    <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+                                    <line x1="12" x2="12" y1="19" y2="22"></line>
+                                </svg>
+                                Start Recording
+                            </span>
+                        </button>
+                    </div>
+
+                    <!-- Expected Answer -->
+                    <div class="mt-4 p-4 border rounded-lg w-full bg-green-50">
+                        <h3 class="font-semibold text-lg mb-2">Expected Answer:</h3>
+                        <p id="expectedAnswer" class="text-gray-700">{{ questions.0.Answer }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add this right after the opening body tag -->
+<div id="debugInfo" style="position: fixed; bottom: 10px; left: 10px; background: rgba(0,0,0,0.7); color: white; padding: 10px; z-index: 9999; max-width: 300px; font-size: 12px; display: none;">
+    Debug info will appear here
+</div>
+
+<script>
+    // Enable debug mode
+    const DEBUG = false;
+    
+    // Debug logging function
+    function debug(message) {
+        if (DEBUG) {
+            console.log(message);
+            const debugElement = document.getElementById('debugInfo');
+            if (debugElement) {
+                debugElement.style.display = 'block';
+                debugElement.innerHTML += message + '<br>';
+                // Keep only last 10 messages
+                const lines = debugElement.innerHTML.split('<br>');
+                if (lines.length > 10) {
+                    debugElement.innerHTML = lines.slice(lines.length - 10).join('<br>');
+                }
+            }
+        } else {
+            // Ensure debug panel is hidden when debug is off
+            const debugElement = document.getElementById('debugInfo');
+            if (debugElement) {
+                debugElement.style.display = 'none';
+            }
+        }
+    }
+    
+    // Basic variables
+    let isRecording = false;
+    let currentQuestionIndex = 0;
+    let stream = null;
+    
+    // Direct onclick handler for the record button
+    function manualToggleRecording() {
+        debug('Manual toggle recording clicked');
+        try {
+            if (!isRecording) {
+                startRecordingBasic();
+            } else {
+                stopRecordingBasic();
+            }
+        } catch (error) {
+            debug('Error in manual toggle: ' + error.message);
+            alert('Recording error: ' + error.message);
+        }
+    }
+    
+    // Simplified recording start
+    async function startRecordingBasic() {
+        debug('Starting basic recording');
+        
+        try {
+            // Update UI first
+            const recordButton = document.getElementById('recordButton');
+            if (recordButton) {
+                recordButton.innerHTML = '<span class="flex gap-2">⏹️ Stop Recording</span>';
+                recordButton.classList.add('bg-red-500');
+            }
+            
+            isRecording = true;
+            
+            // Show transcription box
+            const transcriptionBox = document.getElementById('transcriptionBox');
+            if (transcriptionBox) {
+                transcriptionBox.classList.remove('hidden');
+                const transcriptionText = document.getElementById('transcriptionText');
+                if (transcriptionText) {
+                    transcriptionText.textContent = 'Recording... (speak now)';
+                }
+            }
+            
+            // Get audio permission
+            const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            debug('Got audio stream');
+            
+            // Create a simple recorder
+            window.currentStream = stream;
+            
+            // Try to start speech recognition
+            try {
+                const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+                if (SpeechRecognition) {
+                    const recognition = new SpeechRecognition();
+                    recognition.continuous = true;
+                    recognition.interimResults = true;
+                    
+                    recognition.onresult = function(event) {
+                        debug('Got speech recognition result');
+                        let transcript = '';
+                        for (let i = 0; i < event.results.length; i++) {
+                            transcript += event.results[i][0].transcript + ' ';
+                        }
+                        
+                        const transcriptionText = document.getElementById('transcriptionText');
+                        if (transcriptionText) {
+                            transcriptionText.textContent = transcript;
+                        }
+                    };
+                    
+                    recognition.onerror = function(event) {
+                        debug('Speech recognition error: ' + event.error);
+                    };
+                    
+                    recognition.start();
+                    window.currentRecognition = recognition;
+                    debug('Started speech recognition');
+                } else {
+                    debug('Speech recognition not available');
+                }
+            } catch (error) {
+                debug('Error starting speech recognition: ' + error.message);
+            }
+            
+        } catch (error) {
+            debug('Error in startRecordingBasic: ' + error.message);
+            isRecording = false;
+            const recordButton = document.getElementById('recordButton');
+            if (recordButton) {
+                recordButton.innerHTML = '<span class="flex gap-2">🎤 Start Recording</span>';
+                recordButton.classList.remove('bg-red-500');
+            }
+            throw error;
+        }
+    }
+    
+    // Simplified recording stop
+    function stopRecordingBasic() {
+        debug('Stopping basic recording');
+        
+        try {
+            // Update UI first
+            const recordButton = document.getElementById('recordButton');
+            if (recordButton) {
+                recordButton.innerHTML = '<span class="flex gap-2">🎤 Start Recording</span>';
+                recordButton.classList.remove('bg-red-500');
+            }
+            
+            isRecording = false;
+            
+            // Stop speech recognition
+            if (window.currentRecognition) {
+                window.currentRecognition.stop();
+                debug('Stopped speech recognition');
+            }
+            
+            // Stop audio stream
+            if (window.currentStream) {
+                window.currentStream.getTracks().forEach(track => track.stop());
+                debug('Stopped audio stream');
+            }
+            
+            // Save the transcription
+            const transcriptionText = document.getElementById('transcriptionText');
+            if (transcriptionText) {
+                const answer = transcriptionText.textContent;
+                if (answer && answer !== 'Recording... (speak now)') {
+                    saveAnswerBasic(currentQuestionIndex, answer);
+                }
+            }
+            
+        } catch (error) {
+            debug('Error in stopRecordingBasic: ' + error.message);
+            throw error;
+        }
+    }
+    
+    // Simplified answer saving
+    function saveAnswerBasic(questionIndex, answer) {
+        debug('Saving answer for question ' + questionIndex + ': ' + answer);
+        
+        try {
+            // Save to localStorage as backup
+            localStorage.setItem(`interview_answer_${questionIndex}`, answer);
+            
+            // Try to save to server
+            const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]')?.value;
+            const mockId = document.querySelector('[data-mock-id]')?.getAttribute('data-mock-id');
+            
+            if (csrfToken && mockId) {
+                fetch(`/dashboard/interview/${mockId}/save-answer/`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': csrfToken
+                    },
+                    body: JSON.stringify({
+                        questionIndex: questionIndex,
+                        answer: answer
+                    })
+                })
+                .then(response => {
+                    debug('Server response status: ' + response.status);
+                    return response.json();
+                })
+                .then(data => {
+                    debug('Answer saved to server: ' + JSON.stringify(data));
+                })
+                .catch(error => {
+                    debug('Error saving to server: ' + error.message);
+                });
+            } else {
+                debug('Missing CSRF token or mock ID for server save');
+            }
+        } catch (error) {
+            debug('Error in saveAnswerBasic: ' + error.message);
+        }
+    }
+    
+    // Add direct click handlers to navigation buttons
+    document.addEventListener('DOMContentLoaded', function() {
+        // Hide debug panel immediately
+        const debugElement = document.getElementById('debugInfo');
+        if (debugElement) {
+            debugElement.style.display = 'none';
+        }
+        
+        debug('DOM loaded, setting up basic handlers');
+        
+        // Add mock ID data attribute to body
+        const mockIdMatch = window.location.pathname.match(/\/interview\/([^\/]+)\/start\//);
+        if (mockIdMatch && mockIdMatch[1]) {
+            document.body.setAttribute('data-mock-id', mockIdMatch[1]);
+        }
+        
+        // Set up next button
+        const nextButton = document.getElementById('nextButton');
+        if (nextButton) {
+            nextButton.onclick = function(e) {
+                e.preventDefault();
+                debug('Next button clicked');
+                
+                // Stop recording if active
+                if (isRecording) {
+                    stopRecordingBasic();
+                }
+                
+                // Navigate to next question
+                currentQuestionIndex++;
+                updateQuestionBasic();
+            };
+                } else {
+            debug('Next button not found');
+        }
+        
+        // Set up prev button
+        const prevButton = document.getElementById('prevButton');
+        if (prevButton) {
+            prevButton.onclick = function(e) {
+                e.preventDefault();
+                debug('Previous button clicked');
+                
+                // Stop recording if active
+                if (isRecording) {
+                    stopRecordingBasic();
+                }
+                
+                // Navigate to previous question
+                if (currentQuestionIndex > 0) {
+                    currentQuestionIndex--;
+                    updateQuestionBasic();
+                }
+            };
+        } else {
+            debug('Previous button not found');
+        }
+        
+        // Set up question indicators
+        const indicators = document.querySelectorAll('.question-indicator, h2.p-2.rounded-full');
+        debug('Found ' + indicators.length + ' question indicators');
+        
+        indicators.forEach((indicator, index) => {
+            indicator.onclick = function() {
+                debug('Question indicator ' + index + ' clicked');
+                
+                // Stop recording if active
+                if (isRecording) {
+                    stopRecordingBasic();
+                }
+                
+                // Navigate to selected question
+                currentQuestionIndex = index;
+                updateQuestionBasic();
+            };
+        });
+        
+        // Initial question setup
+        updateQuestionBasic();
+    });
+    
+    // Basic question update
+    function updateQuestionBasic() {
+        debug('Updating to question ' + currentQuestionIndex);
+        
+        try {
+            // Get questions directly from Django template context
+            const questions = {{ questions|safe }};
+            const totalQuestions = questions.length;
+            
+            if (currentQuestionIndex >= totalQuestions) {
+                // Submit the interview
+                debug('Reached end of questions, submitting');
+                window.location.href = `/dashboard/interview/{{ interview.mock_id }}/results/`;
+                return;
+            }
+            
+            // Update question indicators
+            document.querySelectorAll('.question-indicator, h2.p-2.rounded-full').forEach((indicator, index) => {
+                if (index === currentQuestionIndex) {
+                    indicator.classList.add('bg-black', 'text-white');
+                } else {
+                    indicator.classList.remove('bg-black', 'text-white');
+                    indicator.classList.add('bg-secondary');
+                }
+            });
+            
+            // Update current question text
+            const currentQuestionElement = document.getElementById('currentQuestion');
+            if (currentQuestionElement && questions[currentQuestionIndex]) {
+                currentQuestionElement.textContent = questions[currentQuestionIndex].Question;
+            }
+            
+            // Update expected answer
+            const expectedAnswerElement = document.getElementById('expectedAnswer');
+            if (expectedAnswerElement && questions[currentQuestionIndex]) {
+                expectedAnswerElement.textContent = questions[currentQuestionIndex].Answer;
+            }
+            
+            // Load saved answer from localStorage
+            const savedAnswer = localStorage.getItem(`interview_answer_{{ interview.mock_id }}_${currentQuestionIndex}`);
+            const transcriptionText = document.getElementById('transcriptionText');
+            const transcriptionBox = document.getElementById('transcriptionBox');
+            
+            if (transcriptionText) {
+                transcriptionText.textContent = savedAnswer || '';
+            }
+            
+            if (transcriptionBox) {
+                if (savedAnswer) {
+                    transcriptionBox.classList.remove('hidden');
+                            } else {
+                    transcriptionBox.classList.add('hidden');
+                }
+            }
+            
+            // Update navigation buttons
+            const prevButton = document.getElementById('prevButton');
+            if (prevButton) {
+                prevButton.disabled = currentQuestionIndex === 0;
+            }
+            
+            const nextButton = document.getElementById('nextButton');
+            if (nextButton) {
+                if (currentQuestionIndex === totalQuestions - 1) {
+                    nextButton.textContent = 'Submit';
+                } else {
+                    nextButton.textContent = 'Next';
+                }
+            }
+
+            } catch (error) {
+            debug('Error in updateQuestionBasic: ' + error.message);
+            console.error('Error updating question:', error);
+        }
+    }
+
+    // Replace the initializeFaceDetection function with this canvas-based version
+    function initializeFaceDetection() {
+        debug('Initializing face detection with canvas overlay');
+        
+        if (!stream) {
+            debug('No stream available for face detection');
+            return;
+        }
+        
+        const webcamVideo = document.getElementById('webcamVideo');
+        const faceOverlay = document.getElementById('faceOverlay');
+        const faceWarning = document.getElementById('faceDetectionWarning');
+        
+        if (!webcamVideo || !faceOverlay || !faceWarning) {
+            debug('Missing required elements for face detection');
+            return;
+        }
+        
+        // Make sure video is playing before proceeding
+        if (webcamVideo.paused || webcamVideo.ended) {
+            debug('Video not playing, waiting...');
+            webcamVideo.play().then(() => {
+                setTimeout(initializeFaceDetection, 500);
+            }).catch(err => {
+                console.error('Error playing video:', err);
+            });
+            return;
+        }
+        
+        // Set up canvas context
+        const ctx = faceOverlay.getContext('2d');
+        
+        // Make sure canvas matches video dimensions
+        function updateCanvasSize() {
+            const videoWidth = webcamVideo.videoWidth || webcamVideo.clientWidth;
+            const videoHeight = webcamVideo.videoHeight || webcamVideo.clientHeight;
+            
+            if (faceOverlay.width !== videoWidth || faceOverlay.height !== videoHeight) {
+                faceOverlay.width = videoWidth;
+                faceOverlay.height = videoHeight;
+                debug(`Canvas dimensions set to ${faceOverlay.width}x${faceOverlay.height}`);
+            }
+        }
+        
+        // Set detection interval
+        const checkInterval = setInterval(() => {
+            if (!stream || webcamVideo.classList.contains('hidden') || 
+                webcamVideo.paused || webcamVideo.ended) {
+                faceWarning.style.transform = 'translateY(0)';
+                faceWarning.style.opacity = '1';
+                return;
+            }
+            
+            try {
+                // Update canvas size to match video
+                updateCanvasSize();
+                
+                // Draw current video frame to canvas
+                ctx.clearRect(0, 0, faceOverlay.width, faceOverlay.height);
+                ctx.drawImage(webcamVideo, 0, 0, faceOverlay.width, faceOverlay.height);
+                
+                // Draw face detection area
+                const centerX = Math.floor(faceOverlay.width / 2);
+                const centerY = Math.floor(faceOverlay.height / 2);
+                const checkRadius = Math.min(faceOverlay.width, faceOverlay.height) / 4;
+                
+                // Draw detection area outline
+                ctx.strokeStyle = 'rgba(255, 255, 255, 0.5)';
+                ctx.lineWidth = 2;
+                ctx.strokeRect(
+                    centerX - checkRadius,
+                    centerY - checkRadius,
+                    checkRadius * 2,
+                    checkRadius * 2
+                );
+                
+                // Get image data from center of frame
+                const imageData = ctx.getImageData(
+                    centerX - checkRadius,
+                    centerY - checkRadius,
+                    checkRadius * 2,
+                    checkRadius * 2
+                );
+                
+                // Check if there's significant pixel data (not black/empty)
+                let nonEmptyPixels = 0;
+                let totalPixels = (checkRadius * 2) * (checkRadius * 2);
+                
+                for (let i = 0; i < imageData.data.length; i += 4) {
+                    const r = imageData.data[i];
+                    const g = imageData.data[i + 1];
+                    const b = imageData.data[i + 2];
+                    
+                    // If pixel has some color (not black/very dark)
+                    if (r > 20 || g > 20 || b > 20) {
+                        nonEmptyPixels++;
+                    }
+                }
+                
+                // Calculate percentage of non-empty pixels
+                const percentageFilled = (nonEmptyPixels / totalPixels) * 100;
+                
+                // If more than 10% of pixels have content, assume face is present
+                if (percentageFilled > 10) {
+                    // Face detected - draw green box
+                    ctx.strokeStyle = '#00ff00';
+                    ctx.lineWidth = 3;
+                    ctx.strokeRect(
+                        centerX - checkRadius,
+                        centerY - checkRadius,
+                        checkRadius * 2,
+                        checkRadius * 2
+                    );
+                    
+                    // Hide warning
+                    faceWarning.style.transform = 'translateY(100%)';
+                    faceWarning.style.opacity = '0';
+                } else {
+                    // No face detected - draw red box
+                    ctx.strokeStyle = '#ff0000';
+                    ctx.lineWidth = 3;
+                    ctx.strokeRect(
+                        centerX - checkRadius,
+                        centerY - checkRadius,
+                        checkRadius * 2,
+                        checkRadius * 2
+                    );
+                    
+                    // Show warning
+                    faceWarning.textContent = 'Please ensure your face is visible';
+                    faceWarning.style.transform = 'translateY(0)';
+                    faceWarning.style.opacity = '1';
+                }
+                
+            } catch (error) {
+                console.error('Face detection error:', error);
+                debug('Face detection error: ' + error.message);
+            }
+        }, 200); // More frequent updates for smoother visualization
+        
+        // Store interval ID for cleanup
+        window.faceDetectionInterval = checkInterval;
+    }
+
+    // Update toggleWebcam to properly handle face detection
+    function toggleWebcam() {
+        debug('Toggle webcam clicked');
+        
+        try {
+            const webcamVideo = document.getElementById('webcamVideo');
+            const placeholderImage = document.getElementById('placeholderImage');
+            const webcamButton = document.getElementById('webcamButton');
+            
+            if (webcamVideo && webcamButton) {
+                if (webcamVideo.classList.contains('hidden')) {
+                    // Enable webcam
+                    navigator.mediaDevices.getUserMedia({ video: true })
+                        .then(function(newStream) {
+                            // Clear any existing detection interval
+                            if (window.faceDetectionInterval) {
+                                clearInterval(window.faceDetectionInterval);
+                            }
+                            
+                            stream = newStream;
+                            webcamVideo.srcObject = stream;
+                            webcamVideo.play().then(() => {
+                                webcamVideo.classList.remove('hidden');
+                                
+                                if (placeholderImage) {
+                                    placeholderImage.classList.add('hidden');
+                                }
+                                
+                                webcamButton.innerHTML = `
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" 
+                     fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" 
+                                         stroke-linejoin="round" class="mr-2">
+                                        <path d="M23 7l-7 5 7 5V7z"></path>
+                                        <rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect>
+                </svg>
+                                    <span>Disable Camera</span>
+                                `;
+                                
+                                // Initialize face detection after video starts playing
+                                setTimeout(initializeFaceDetection, 500);
+                            });
+                        })
+                        .catch(function(error) {
+                            console.error('Error accessing camera:', error);
+                            alert('Failed to access camera. Please check your permissions.');
+                        });
+        } else {
+                    // Disable webcam
+                    if (stream) {
+                        stream.getTracks().forEach(track => track.stop());
+                    }
+                    
+                    // Clear detection interval
+                    if (window.faceDetectionInterval) {
+                        clearInterval(window.faceDetectionInterval);
+                    }
+                    
+                    webcamVideo.srcObject = null;
+                    webcamVideo.classList.add('hidden');
+                    
+                    if (placeholderImage) {
+                        placeholderImage.classList.remove('hidden');
+                    }
+                    
+                    webcamButton.innerHTML = `
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" 
+                             fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" 
+                             stroke-linejoin="round" class="mr-2">
+                                <path d="M23 7l-7 5 7 5V7z"></path>
+                                <rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect>
+                            </svg>
+                            <span>Enable Camera</span>
+                        `;
+                    
+                    // Show face warning
+                    const faceWarning = document.getElementById('faceDetectionWarning');
+                    if (faceWarning) {
+                        faceWarning.style.transform = 'translateY(0)';
+                        faceWarning.style.opacity = '1';
+                    }
+                }
+            }
+        } catch (error) {
+            console.error('Error toggling webcam:', error);
+            alert('Failed to toggle webcam: ' + error.message);
+        }
+    }
+
+    // Replace the showAllQuestions function with this fixed version
+    function showAllQuestions() {
+        debug('Show all questions clicked');
+        
+        try {
+            // Get questions directly from Django context
+            const questions = {{ questions|safe }};
+            
+            if (!questions || questions.length === 0) {
+                alert('No questions available to display');
+                return;
+            }
+            
+            // Create modal overlay
+            const modal = document.createElement('div');
+            modal.className = 'fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4';
+            modal.id = 'questionsModal';
+            
+            // Create modal content
+            const modalContent = document.createElement('div');
+            modalContent.className = 'bg-white rounded-lg shadow-xl max-w-4xl w-full max-h-[80vh] overflow-y-auto p-6';
+            
+            // Create header with close button
+            const header = document.createElement('div');
+            header.className = 'flex justify-between items-center mb-4 pb-2 border-b';
+            header.innerHTML = `
+                <h2 class="text-xl font-bold">All Interview Questions</h2>
+                <button class="text-gray-500 hover:text-gray-700" onclick="closeQuestionsModal()">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" 
+                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" 
+                         stroke-linejoin="round">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            `;
+            
+            // Create questions list
+            const questionsList = document.createElement('div');
+            questionsList.className = 'space-y-6';
+            
+            // Add each question and answer
+            questions.forEach((question, index) => {
+                const questionItem = document.createElement('div');
+                questionItem.className = 'p-4 border rounded-lg ' + 
+                    (index === currentQuestionIndex ? 'bg-blue-50 border-blue-300' : 'bg-gray-50');
+                
+                questionItem.innerHTML = `
+                    <div class="flex items-start gap-2">
+                        <span class="bg-blue-500 text-white rounded-full w-6 h-6 flex items-center justify-center flex-shrink-0">
+                            ${index + 1}
+                        </span>
+                        <div class="flex-1">
+                            <h3 class="font-semibold text-lg mb-2">${question.Question}</h3>
+                            <div class="mt-2">
+                                <p class="text-sm text-gray-500 mb-1">Expected Answer:</p>
+                                <p class="text-gray-700 bg-white p-2 rounded border">${question.Answer}</p>
+                            </div>
+                            <button class="mt-3 px-3 py-1 bg-blue-500 text-white rounded text-sm hover:bg-blue-600"
+                                    onclick="navigateToQuestion(${index}); closeQuestionsModal();">
+                                Go to this question
+                            </button>
+                        </div>
+                    </div>
+                `;
+                
+                questionsList.appendChild(questionItem);
+            });
+            
+            // Assemble modal
+            modalContent.appendChild(header);
+            modalContent.appendChild(questionsList);
+            modal.appendChild(modalContent);
+            
+            // Add to document
+            document.body.appendChild(modal);
+            
+            // Prevent scrolling on body
+            document.body.style.overflow = 'hidden';
+            
+        } catch (error) {
+            console.error('Error showing all questions:', error);
+            debug('Error showing questions: ' + error.message);
+            alert('Failed to display questions. Please try again.');
+        }
+    }
+
+    // Add close modal function
+    function closeQuestionsModal() {
+        const modal = document.getElementById('questionsModal');
+        if (modal) {
+            modal.remove();
+            document.body.style.overflow = '';
+        }
+    }
+
+    // Add navigation function
+    function navigateToQuestion(index) {
+                // Save current answer
+        const currentAnswer = document.getElementById('transcriptionText')?.textContent;
+        if (currentAnswer && currentAnswer !== 'Recording... (speak now)') {
+            saveAnswerBasic(currentQuestionIndex, currentAnswer);
+        }
+                
+        // Update current question index
+                currentQuestionIndex = index;
+        
+        // Update UI
+        updateQuestionBasic();
+        
+        // Update question indicators
+        document.querySelectorAll('.question-indicator').forEach((indicator, idx) => {
+            if (idx === index) {
+                indicator.classList.add('bg-black', 'text-white');
+            } else {
+                indicator.classList.remove('bg-black', 'text-white');
+            }
+        });
+    }
+</script>
+
+<!-- Add this at the end of the body -->
+<script>
+    // Add questions data to the page
+    document.addEventListener('DOMContentLoaded', function() {
+        try {
+            // Create a data element with all questions
+            const dataElement = document.createElement('div');
+            dataElement.style.display = 'none';
+            dataElement.setAttribute('data-questions', '{{ questions|escapejs|safe }}');
+            document.body.appendChild(dataElement);
+            
+            // Add data attributes to question indicators
+            const questionElements = document.querySelectorAll('.question-indicator, h2.p-2.rounded-full');
+            const questionsData = JSON.parse('{{ questions|escapejs|safe }}');
+            
+            questionElements.forEach((element, index) => {
+                if (questionsData && questionsData.length > index) {
+                    element.setAttribute('data-question-index', index);
+                    element.setAttribute('data-question-text', questionsData[index].Question);
+                    element.setAttribute('data-answer-text', questionsData[index].Answer);
+                }
+            });
+            
+            debug('Questions data initialized');
+        } catch (error) {
+            debug('Error initializing questions data: ' + error.message);
+        }
+    });
+</script>
+
+<!-- Face Detection Warning -->
+<div id="faceDetectionWarning" class="fixed bottom-4 right-4 bg-red-500 text-white px-4 py-2 rounded-lg 
+                                     shadow-lg flex items-center gap-2 transform translate-y-full opacity-0 
+                                     transition-all duration-300">
+    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" 
+         stroke="currentColor" stroke-width="2" class="animate-pulse">
+        <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+        <line x1="12" y1="9" x2="12" y2="13"/>
+        <line x1="12" y1="17" x2="12.01" y2="17"/>
+    </svg>
+    Please ensure your face is visible
+</div>
+
+<script>
+    // Check if camera was enabled in previous page
+    window.addEventListener('DOMContentLoaded', async () => {
+        if (sessionStorage.getItem('cameraEnabled') === 'true') {
+            try {
+                // Get stored video settings
+                const videoSettings = JSON.parse(sessionStorage.getItem('videoSettings') || '{}');
+                
+                // Request camera with same settings
+                stream = await navigator.mediaDevices.getUserMedia({
+                    video: videoSettings || true
+                });
+                
+                // Set up video element
+                const webcamVideo = document.getElementById('webcamVideo');
+                webcamVideo.srcObject = stream;
+                await webcamVideo.play();
+                webcamVideo.classList.remove('hidden');
+                
+                // Update UI to show camera is active
+                const placeholderImage = document.getElementById('placeholderImage');
+                if (placeholderImage) {
+                    placeholderImage.classList.add('hidden');
+                }
+            } catch (error) {
+                console.error('Error maintaining camera state:', error);
+            }
+        }
+    });
+    
+    // Clear camera state when leaving interview
+    window.addEventListener('beforeunload', () => {
+        sessionStorage.removeItem('cameraEnabled');
+        sessionStorage.removeItem('videoSettings');
+    });
+</script>
+{% endblock %} 

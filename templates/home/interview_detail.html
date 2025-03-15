@@ -1,0 +1,193 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white">
+    <!-- Header -->
+    <div class="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 sticky top-0 z-50">
+        <div class="w-[80%] m-auto flex gap-4 items-center justify-between">
+            <a class="hidden md:block" href="/dashboard">
+                <!-- Logo can go here -->
+            </a>
+            <ul class="hidden md:flex gap-6">
+                <a href="/dashboard">
+                    <li class="hover:text-black hover:font-bold transition-all cursor-pointer">Dashboard</li>
+                </a>
+                <a href="/dashboard/upgrade">
+                    <li class="hover:text-black hover:font-bold transition-all cursor-pointer">Upgrade</li>
+                </a>
+                <a href="/dashboard/howit">
+                    <li class="hover:text-black hover:font-bold transition-all cursor-pointer">How it works?</li>
+                </a>
+            </ul>
+            <div class="flex gap-10">
+                <button class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium 
+                             ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 
+                             focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none 
+                             disabled:opacity-50 border border-input bg-background hover:bg-accent 
+                             hover:text-accent-foreground h-10 w-10" 
+                        type="button">
+                    <span class="sr-only">Toggle theme</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="mx-5 md:mx-20 lg:mx-36">
+        <div class="my-10">
+            <h2 class="font-bold text-2xl text-center">Let's Get Started</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+                <!-- Interview Details -->
+                <div class="flex flex-col my-5 gap-5">
+                    <div class="flex flex-col p-6 rounded-lg bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm
+                               border border-gray-200/50 dark:border-gray-700/50 gap-6">
+                        <h2 class="text-xl font-medium">Job Details</h2>
+                        <div class="space-y-4">
+                            <div class="flex flex-col gap-1">
+                                <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">Job Role/Position</h3>
+                                <p class="text-lg font-semibold bg-blue-50 dark:bg-blue-900/30 rounded-md px-3 py-2">
+                                    {{ interview.job_position }}
+                                </p>
+                            </div>
+                            <div class="flex flex-col gap-1">
+                                <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">Job Description/Stack</h3>
+                                <p class="text-lg font-semibold bg-blue-50 dark:bg-blue-900/30 rounded-md px-3 py-2">
+                                    {{ interview.job_desc }}
+                                </p>
+                            </div>
+                            <div class="flex flex-col gap-1">
+                                <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400">Years of Experience</h3>
+                                <p class="text-lg font-semibold bg-blue-50 dark:bg-blue-900/30 rounded-md px-3 py-2">
+                                    {{ interview.job_experience }}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Webcam Section -->
+                <div>
+                    <div class="relative w-[300px] h-[300px] mx-auto">
+                        <video id="webcamVideo" 
+                               autoplay 
+                               playsinline 
+                               muted 
+                               height="300" 
+                               width="300" 
+                               class="rounded-lg border w-full h-full object-cover hidden"
+                               style="transform: rotateY(180deg);">
+                        </video>
+                        <img alt="camera placeholder" 
+                             src="/_next/image?url=%2Fcamera.jpg&amp;w=640&amp;q=75" 
+                             class="opacity-50 absolute top-0 left-0 w-full h-full object-cover" 
+                             id="placeholderImage">
+                    </div>
+                    <!-- Controls Container -->
+                    <div class="flex flex-col items-center justify-center mt-4 space-y-4">
+                        <button onclick="toggleWebcam()" id="webcamButton" 
+                                class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm 
+                                       font-medium ring-offset-background transition-colors focus-visible:outline-none 
+                                       focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 
+                                       disabled:pointer-events-none disabled:opacity-50 border border-input 
+                                       bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" 
+                                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" 
+                                 stroke-linejoin="round" class="mr-2">
+                                <path d="M23 7l-7 5 7 5V7z"/>
+                                <rect x="1" y="5" width="15" height="14" rx="2" ry="2"/>
+                            </svg>
+                            <span>Enable Camera</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Start Button -->
+            <div id="startButtonContainer" class="hidden flex justify-center my-4">
+                <button onclick="startInterviewWithCamera()" 
+                        class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm 
+                               font-medium ring-offset-background transition-colors focus-visible:outline-none 
+                               focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 
+                               disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground 
+                               hover:bg-primary/90 h-10 px-4 py-2">
+                    Start Interview
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    let stream = null;
+    let isWebcamActive = false;
+    
+    async function toggleWebcam() {
+        const button = document.getElementById('webcamButton');
+        const buttonText = button.querySelector('span');
+        const buttonIcon = button.querySelector('svg');
+        const startButtonContainer = document.getElementById('startButtonContainer');
+        const webcamVideo = document.getElementById('webcamVideo');
+        const webcamPlaceholder = document.getElementById('placeholderImage');
+        
+        try {
+            if (!isWebcamActive) {
+                stream = await navigator.mediaDevices.getUserMedia({
+                    video: true
+                });
+                
+                webcamVideo.srcObject = stream;
+                await webcamVideo.play();
+                webcamVideo.classList.remove('hidden');
+                webcamPlaceholder.classList.add('hidden');
+                startButtonContainer.classList.remove('hidden');
+                
+                buttonText.textContent = 'Disable Camera';
+                buttonIcon.innerHTML = `
+                    <path d="M21 12v7a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v7z"/>
+                    <line x1="1" y1="1" x2="23" y2="23"/>
+                `;
+                isWebcamActive = true;
+                
+            } else {
+                if (stream) {
+                    stream.getTracks().forEach(track => track.stop());
+                }
+                
+                webcamVideo.srcObject = null;
+                webcamVideo.classList.add('hidden');
+                webcamPlaceholder.classList.remove('hidden');
+                startButtonContainer.classList.add('hidden');
+                
+                buttonText.textContent = 'Enable Camera';
+                buttonIcon.innerHTML = `
+                    <path d="M23 7l-7 5 7 5V7z"/>
+                    <rect x="1" y="5" width="15" height="14" rx="2" ry="2"/>
+                `;
+                isWebcamActive = false;
+            }
+        } catch (error) {
+            console.error('Error accessing media devices:', error);
+            alert('Failed to access camera. Please make sure you have granted the necessary permissions.');
+        }
+    }
+    
+    function startInterviewWithCamera() {
+        sessionStorage.setItem('cameraEnabled', 'true');
+        if (stream) {
+            const videoTrack = stream.getVideoTracks()[0];
+            if (videoTrack) {
+                sessionStorage.setItem('videoSettings', JSON.stringify(videoTrack.getSettings()));
+            }
+        }
+        window.location.href = `/dashboard/interview/{{ interview.mock_id }}/start/`;
+    }
+    
+    window.addEventListener('beforeunload', (event) => {
+        if (!sessionStorage.getItem('cameraEnabled')) {
+            if (stream) {
+                stream.getTracks().forEach(track => track.stop());
+            }
+        }
+    });
+</script>
+{% endblock %} 

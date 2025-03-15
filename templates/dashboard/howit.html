@@ -1,0 +1,578 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <!-- Animated Background -->
+    <div class="fixed inset-0 -z-10 overflow-hidden">
+        <!-- 3D Shapes -->
+        <div class="shapes-container absolute inset-0">
+            <!-- Rotating Cube -->
+            <div class="cube">
+                <div class="face front"></div>
+                <div class="face back"></div>
+                <div class="face right"></div>
+                <div class="face left"></div>
+                <div class="face top"></div>
+                <div class="face bottom"></div>
+            </div>
+            
+            <!-- Floating Sphere -->
+            <div class="sphere"></div>
+            
+            <!-- Tech Icons -->
+            <div class="tech-icons">
+                {% for i in "123"|make_list %}
+                <svg class="tech-icon" viewBox="0 0 24 24">
+                    <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" 
+                          fill="none" stroke="currentColor" stroke-width="1"/>
+                </svg>
+                <svg class="tech-icon" viewBox="0 0 24 24">
+                    <circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="1"/>
+                    <path d="M12 2v20M2 12h20" stroke="currentColor" stroke-width="1"/>
+                </svg>
+                <svg class="tech-icon" viewBox="0 0 24 24">
+                    <polygon points="12 2 19 21 5 21" fill="none" stroke="currentColor" stroke-width="1"/>
+                </svg>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Animated Particles -->
+        <div id="particles-js" class="absolute inset-0 opacity-30"></div>
+        
+        <!-- Gradient Orbs -->
+        <div class="absolute top-0 -left-4 w-72 h-72 bg-purple-300 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob hover:bg-purple-400 transition-colors duration-500"></div>
+        <div class="absolute top-0 -right-4 w-72 h-72 bg-yellow-300 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-2000 hover:bg-yellow-400 transition-colors duration-500"></div>
+        <div class="absolute -bottom-8 left-20 w-72 h-72 bg-pink-300 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-4000 hover:bg-pink-400 transition-colors duration-500"></div>
+        
+        <!-- Floating Elements -->
+        <div class="absolute inset-0 overflow-hidden">
+            {% for i in "123456789"|make_list %}
+            <div class="floating-element absolute w-3 h-3 bg-white/20 rounded-full"></div>
+            {% endfor %}
+        </div>
+        
+        <!-- Grid Pattern -->
+        <div class="absolute inset-0 bg-grid-white/[0.05] bg-[length:50px_50px] animate-grid-flow"></div>
+        
+        <!-- Gradient Overlay -->
+        <div class="absolute inset-0 bg-gradient-to-br from-indigo-500/10 via-purple-500/10 to-pink-500/10"></div>
+
+        <!-- DNA Helix -->
+        <div class="dna-container">
+            {% for i in "12345"|make_list %}
+            <div class="dna-strand">
+                <div class="dna-base base-left"></div>
+                <div class="dna-base base-right"></div>
+            </div>
+            {% endfor %}
+        </div>
+        
+        <!-- Floating Code Blocks -->
+        <div class="code-rain">
+            {% for i in "123456"|make_list %}
+            <div class="code-block">
+                <pre><code>
+                    function interview() {
+                        const ai = new AI();
+                        return ai.analyze();
+                    }
+                </code></pre>
+            </div>
+            {% endfor %}
+        </div>
+        
+        <!-- Neural Network -->
+        <div class="neural-network">
+            {% for i in "123456789"|make_list %}
+            <div class="neuron"></div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <style>
+        @keyframes blob {
+            0% { transform: translate(0px, 0px) scale(1); }
+            33% { transform: translate(30px, -50px) scale(1.1); }
+            66% { transform: translate(-20px, 20px) scale(0.9); }
+            100% { transform: translate(0px, 0px) scale(1); }
+        }
+        @keyframes float {
+            0% { transform: translateY(0px) rotate(0deg); opacity: 0; }
+            50% { opacity: 0.8; }
+            100% { transform: translateY(-100vh) rotate(360deg); opacity: 0; }
+        }
+        @keyframes grid-flow {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(50px); }
+        }
+        .animate-blob {
+            animation: blob 7s infinite;
+        }
+        .animate-grid-flow {
+            animation: grid-flow 20s linear infinite;
+        }
+        .animation-delay-2000 {
+            animation-delay: 2s;
+        }
+        .animation-delay-4000 {
+            animation-delay: 4s;
+        }
+        .bg-grid-white {
+            background-image: linear-gradient(to right, rgba(255,255,255,0.1) 1px, transparent 1px),
+                                 linear-gradient(to bottom, rgba(255,255,255,0.1) 1px, transparent 1px);
+        }
+        .floating-element {
+            animation: float 15s linear infinite;
+            left: v-bind("Math.random() * 100 + '%'");
+            animation-delay: v-bind("Math.random() * 15 + 's'");
+        }
+
+        /* 3D Shapes Styles */
+        .shapes-container {
+            perspective: 1000px;
+            transform-style: preserve-3d;
+        }
+        
+        /* Cube Animation */
+        .cube {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            top: 20%;
+            left: 15%;
+            transform-style: preserve-3d;
+            animation: rotateCube 20s infinite linear;
+        }
+        
+        .face {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(5px);
+        }
+        
+        .front  { transform: translateZ(50px); }
+        .back   { transform: translateZ(-50px) rotateY(180deg); }
+        .right  { transform: rotateY(90deg) translateZ(50px); }
+        .left   { transform: rotateY(-90deg) translateZ(50px); }
+        .top    { transform: rotateX(90deg) translateZ(50px); }
+        .bottom { transform: rotateX(-90deg) translateZ(50px); }
+        
+        @keyframes rotateCube {
+            0% { transform: rotateX(0) rotateY(0) rotateZ(0); }
+            100% { transform: rotateX(360deg) rotateY(360deg) rotateZ(360deg); }
+        }
+        
+        /* Sphere Animation */
+        .sphere {
+            position: absolute;
+            width: 80px;
+            height: 80px;
+            top: 60%;
+            right: 15%;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+            box-shadow: inset 0 0 20px rgba(255, 255, 255, 0.2);
+            animation: floatSphere 8s infinite ease-in-out;
+        }
+        
+        @keyframes floatSphere {
+            0%, 100% { transform: translateY(0) scale(1); }
+            50% { transform: translateY(-30px) scale(1.1); }
+        }
+        
+        /* Tech Icons Animation */
+        .tech-icons {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+        }
+        
+        .tech-icon {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            color: rgba(255, 255, 255, 0.1);
+            animation: floatIcon 10s infinite linear;
+        }
+        
+        .tech-icon:nth-child(1) { top: 30%; left: 40%; animation-delay: 0s; }
+        .tech-icon:nth-child(2) { top: 50%; left: 60%; animation-delay: -3s; }
+        .tech-icon:nth-child(3) { top: 70%; left: 30%; animation-delay: -6s; }
+        
+        @keyframes floatIcon {
+            0% {
+                transform: translate(0, 0) rotate(0deg);
+                opacity: 0;
+            }
+            25% {
+                opacity: 0.5;
+            }
+            50% {
+                transform: translate(100px, -100px) rotate(180deg);
+                opacity: 0.8;
+            }
+            75% {
+                opacity: 0.5;
+            }
+            100% {
+                transform: translate(0, 0) rotate(360deg);
+                opacity: 0;
+            }
+        }
+        
+        /* Add glowing effect */
+        .cube::after,
+        .sphere::after {
+            content: '';
+            position: absolute;
+            inset: -10px;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            filter: blur(10px);
+            animation: pulse 4s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 0.8; }
+        }
+
+        /* DNA Helix Animation */
+        .dna-container {
+            position: absolute;
+            top: 50%;
+            left: 10%;
+            transform: translateY(-50%);
+            perspective: 1000px;
+            animation: rotateDNA 20s linear infinite;
+        }
+        
+        .dna-strand {
+            position: relative;
+            width: 100px;
+            height: 30px;
+            margin: 20px 0;
+            transform-style: preserve-3d;
+        }
+        
+        .dna-base {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
+        }
+        
+        .base-left {
+            left: 0;
+            animation: moveLeft 3s ease-in-out infinite;
+        }
+        
+        .base-right {
+            right: 0;
+            animation: moveRight 3s ease-in-out infinite;
+        }
+        
+        @keyframes rotateDNA {
+            0% { transform: translateY(-50%) rotateY(0deg); }
+            100% { transform: translateY(-50%) rotateY(360deg); }
+        }
+        
+        @keyframes moveLeft {
+            0%, 100% { transform: translateX(0) scale(1); }
+            50% { transform: translateX(20px) scale(1.2); }
+        }
+        
+        @keyframes moveRight {
+            0%, 100% { transform: translateX(0) scale(1); }
+            50% { transform: translateX(-20px) scale(1.2); }
+        }
+        
+        /* Code Rain Animation */
+        .code-rain {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+        }
+        
+        .code-block {
+            position: absolute;
+            font-family: monospace;
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.15);
+            white-space: pre;
+            animation: codeRain 15s linear infinite;
+        }
+        
+        .code-block:nth-child(1) { left: 20%; animation-delay: 0s; }
+        .code-block:nth-child(2) { left: 40%; animation-delay: -5s; }
+        .code-block:nth-child(3) { left: 60%; animation-delay: -10s; }
+        .code-block:nth-child(4) { left: 80%; animation-delay: -7s; }
+        
+        @keyframes codeRain {
+            0% { transform: translateY(-100%) rotate(5deg); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(100vh) rotate(5deg); opacity: 0; }
+        }
+        
+        /* Neural Network Animation */
+        .neural-network {
+            position: absolute;
+            inset: 0;
+            perspective: 1000px;
+        }
+        
+        .neuron {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0) 70%);
+            border-radius: 50%;
+            animation: pulseNeuron 4s infinite;
+        }
+        
+        .neuron::after {
+            content: '';
+            position: absolute;
+            width: 100px;
+            height: 1px;
+            background: linear-gradient(90deg, rgba(255,255,255,0.2), transparent);
+            transform-origin: left center;
+            animation: connectNeurons 4s infinite;
+        }
+        
+        @keyframes pulseNeuron {
+            0%, 100% { transform: scale(1); opacity: 0.3; }
+            50% { transform: scale(1.5); opacity: 0.8; }
+        }
+        
+        @keyframes connectNeurons {
+            0% { transform: scaleX(0); opacity: 0; }
+            50% { transform: scaleX(1); opacity: 1; }
+            100% { transform: scaleX(0); opacity: 0; }
+        }
+    </style>
+
+    <!-- Header -->
+    <header class="fixed w-full top-0 z-50">
+        <!-- Glassmorphism background -->
+        <div class="absolute inset-0 bg-white/70 dark:bg-gray-800/70 backdrop-blur-md border-b border-gray-200/50 dark:border-gray-700/50"></div>
+        
+        <!-- Header content -->
+        <div class="relative w-[90%] lg:w-[80%] mx-auto py-4">
+            <div class="flex items-center justify-between">
+                <!-- Logo Section -->
+                <a href="/dashboard" class="flex items-center space-x-3 group">
+                    <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center transform transition-transform group-hover:scale-110">
+                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                  d="M8 9a3 3 0 100-6 3 3 0 000 6zM8 11a6 6 0 016 6H2a6 6 0 016-6zM16 7a1 1 0 10-2 0v1h-1a1 1 0 100 2h1v1a1 1 0 102 0v-1h1a1 1 0 100-2h-1V7z"/>
+                        </svg>
+                    </div>
+                    <span class="text-2xl font-bold bg-gradient-to-r from-indigo-500 to-purple-600 bg-clip-text text-transparent">
+                        AI Mock Interview
+                    </span>
+                </a>
+
+                <!-- Navigation -->
+                <nav class="hidden md:flex items-center space-x-8">
+                    <a href="/dashboard" 
+                       class="relative group px-4 py-2 text-gray-600 dark:text-gray-300 font-medium transition-colors">
+                        <span class="relative z-10">Dashboard</span>
+                        <div class="absolute inset-0 h-1 w-0 bg-indigo-500/20 dark:bg-indigo-400/20 rounded-full bottom-0 
+                                  group-hover:w-full transition-all duration-300"></div>
+                    </a>
+                    <a href="/dashboard" 
+                       class="px-4 py-2 bg-gradient-to-r from-indigo-500 to-purple-600 text-white rounded-lg 
+                              shadow-lg shadow-indigo-500/30 hover:shadow-indigo-500/50 transform hover:-translate-y-0.5 
+                              transition-all duration-300">
+                        Start Interview
+                    </a>
+                </nav>
+
+                <!-- Mobile Menu Button -->
+                <button class="md:hidden p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                    <svg class="w-6 h-6 text-gray-600 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+                    </svg>
+                </button>
+            </div>
+            
+            <!-- Mobile Menu (Hidden by default) -->
+            <div class="md:hidden absolute top-full left-0 right-0 bg-white dark:bg-gray-800 border-b border-gray-200 
+                        dark:border-gray-700 hidden">
+                <nav class="flex flex-col p-4 space-y-4">
+                    <a href="/dashboard" class="px-4 py-2 text-gray-600 dark:text-gray-300 hover:bg-gray-100 
+                                               dark:hover:bg-gray-700 rounded-lg transition-colors">
+                        Dashboard
+                    </a>
+                    <a href="/dashboard" class="px-4 py-2 bg-gradient-to-r from-indigo-500 to-purple-600 text-white 
+                                               rounded-lg text-center">
+                        Start Interview
+                    </a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="max-w-7xl mx-auto pt-28 pb-12 px-4 sm:px-6 lg:px-8 relative">
+        <!-- Hero Section -->
+        <div class="text-center mb-20 relative">
+            <!-- Decorative gradient circle -->
+            <div class="absolute -top-10 left-1/2 -translate-x-1/2 w-40 h-40 bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-full blur-3xl"></div>
+            <h1 class="text-4xl font-bold text-gray-900 dark:text-white mb-4">How AI Mock Interview Works</h1>
+            <p class="text-xl text-gray-600 dark:text-gray-300">Master your interview skills with our AI-powered platform</p>
+        </div>
+
+        <!-- Steps -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-20 relative z-10">
+            <!-- Step 1 -->
+            <div class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-lg p-6 shadow-lg border border-gray-200/50 dark:border-gray-700/50 transform transition-all duration-300 hover:scale-105 hover:shadow-xl">
+                <div class="w-12 h-12 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center mb-4">
+                    <span class="text-blue-600 dark:text-blue-400 text-xl font-bold">1</span>
+                </div>
+                <h3 class="text-xl font-semibold mb-2 text-gray-900 dark:text-white">Create Your Interview</h3>
+                <p class="text-gray-600 dark:text-gray-300">Enter your target job position and experience level. Our AI generates relevant technical questions.</p>
+            </div>
+
+            <!-- Step 2 -->
+            <div class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-lg p-6 shadow-lg border border-gray-200/50 dark:border-gray-700/50 transform transition-all duration-300 hover:scale-105 hover:shadow-xl">
+                <div class="w-12 h-12 bg-green-100 dark:bg-green-900 rounded-full flex items-center justify-center mb-4">
+                    <span class="text-green-600 dark:text-green-400 text-xl font-bold">2</span>
+                </div>
+                <h3 class="text-xl font-semibold mb-2 text-gray-900 dark:text-white">Answer Questions</h3>
+                <p class="text-gray-600 dark:text-gray-300">Use your webcam and microphone to record your responses. Our AI analyzes your verbal and non-verbal communication.</p>
+            </div>
+
+            <!-- Step 3 -->
+            <div class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-lg p-6 shadow-lg border border-gray-200/50 dark:border-gray-700/50 transform transition-all duration-300 hover:scale-105 hover:shadow-xl">
+                <div class="w-12 h-12 bg-purple-100 dark:bg-purple-900 rounded-full flex items-center justify-center mb-4">
+                    <span class="text-purple-600 dark:text-purple-400 text-xl font-bold">3</span>
+                </div>
+                <h3 class="text-xl font-semibold mb-2 text-gray-900 dark:text-white">Get Feedback</h3>
+                <p class="text-gray-600 dark:text-gray-300">Receive detailed feedback on your technical knowledge, communication skills, and areas for improvement.</p>
+            </div>
+        </div>
+
+        <!-- Features -->
+        <div class="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-lg p-8 shadow-lg border border-gray-200/50 dark:border-gray-700/50 transform transition-all duration-300 hover:shadow-xl relative z-10">
+            <h2 class="text-2xl font-bold mb-6 text-gray-900 dark:text-white">Key Features</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Feature 1 -->
+                <div class="flex items-start space-x-4">
+                    <svg class="w-6 h-6 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                    <div>
+                        <h3 class="font-semibold text-gray-900 dark:text-white">AI-Generated Questions</h3>
+                        <p class="text-gray-600 dark:text-gray-300">Customized technical questions based on your job profile</p>
+                    </div>
+                </div>
+
+                <!-- Feature 2 -->
+                <div class="flex items-start space-x-4">
+                    <svg class="w-6 h-6 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                    </svg>
+                    <div>
+                        <h3 class="font-semibold text-gray-900 dark:text-white">Face Detection</h3>
+                        <p class="text-gray-600 dark:text-gray-300">Real-time feedback on your facial expressions and eye contact</p>
+                    </div>
+                </div>
+
+                <!-- Feature 3 -->
+                <div class="flex items-start space-x-4">
+                    <svg class="w-6 h-6 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"/>
+                    </svg>
+                    <div>
+                        <h3 class="font-semibold text-gray-900 dark:text-white">Speech Recognition</h3>
+                        <p class="text-gray-600 dark:text-gray-300">Automatic transcription of your answers for detailed analysis</p>
+                    </div>
+                </div>
+
+                <!-- Feature 4 -->
+                <div class="flex items-start space-x-4">
+                    <svg class="w-6 h-6 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+                    </svg>
+                    <div>
+                        <h3 class="font-semibold text-gray-900 dark:text-white">Detailed Reports</h3>
+                        <p class="text-gray-600 dark:text-gray-300">Comprehensive feedback on your performance with improvement tips</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CTA -->
+        <div class="text-center mt-20 relative z-10">
+            <a href="/dashboard" class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700">
+                Start Your Interview
+                <svg class="ml-2 -mr-1 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
+                </svg>
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Particles.js -->
+<script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        particlesJS('particles-js', {
+            particles: {
+                number: { value: 80, density: { enable: true, value_area: 800 } },
+                color: { value: '#ffffff' },
+                shape: { type: 'circle' },
+                opacity: {
+                    value: 0.5,
+                    random: true,
+                    animation: { enable: true, speed: 1, minimumValue: 0.1, sync: false }
+                },
+                size: {
+                    value: 3,
+                    random: true,
+                    animation: { enable: true, speed: 2, minimumValue: 0.1, sync: false }
+                },
+                line_linked: {
+                    enable: true,
+                    distance: 150,
+                    color: '#ffffff',
+                    opacity: 0.2,
+                    width: 1
+                },
+                move: {
+                    enable: true,
+                    speed: 1,
+                    direction: 'none',
+                    random: true,
+                    straight: false,
+                    outModes: { default: 'bounce' },
+                    attract: { enable: false, rotateX: 600, rotateY: 1200 }
+                }
+            },
+            interactivity: {
+                detectsOn: 'canvas',
+                events: {
+                    onHover: { enable: true, mode: 'repulse' },
+                    onClick: { enable: true, mode: 'push' },
+                    resize: true
+                },
+                modes: {
+                    repulse: { distance: 100, duration: 0.4 },
+                    push: { particles_nb: 4 }
+                }
+            },
+            retina_detect: true
+        });
+    });
+</script>
+{% endblock %} 

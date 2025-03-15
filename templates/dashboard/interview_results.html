@@ -1,0 +1,474 @@
+{% extends 'base.html' %}
+
+{% block extra_head %}
+
+
+
+<script src="https://warm-bee-97.clerk.accounts.dev/npm/@clerk/clerk-js@5/dist/clerk.browser.js" 
+        data-clerk-js-script="true" async="" crossorigin="anonymous" 
+        data-clerk-publishable-key="pk_test_d2FybS1iZWUtOTcuY2xlcmsuYWNjb3VudHMuZGV2JA">
+</script>
+{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-gray-50 dark:bg-gray-900">
+    <!-- Header -->
+    <div class="bg-secondary shadow-sm">
+        <div class="w-[80%] m-auto flex gap-4 items-center justify-between">
+            <a class="hidden md:block" href="/dashboard">
+            </a>
+            <ul class="hidden md:flex gap-6">
+                <a href="/dashboard">
+                    <li class="hover:text-black hover:font-bold transition-all cursor-pointer">Dashboard</li>
+                </a>
+               
+                <a href="/dashboard/howit">
+                    <li class="hover:text-black hover:font-bold transition-all cursor-pointer">How it works?</li>
+                </a>
+            </ul>
+            <div class="flex gap-10">
+                <button class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm 
+                             font-medium ring-offset-background transition-colors focus-visible:outline-none 
+                             focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 
+                             disabled:pointer-events-none disabled:opacity-50 border border-input bg-background 
+                             hover:bg-accent hover:text-accent-foreground h-10 w-10" 
+                        type="button">
+                    <span class="sr-only">Toggle theme</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="mx-5 md:mx-20 lg:mx-36 py-10 relative">
+        <!-- Background decorative elements -->
+        <div class="absolute inset-0 bg-gradient-to-br from-blue-50/50 to-purple-50/50 dark:from-blue-950/50 
+                    dark:to-purple-950/50 rounded-3xl -z-10 blur-xl"></div>
+        
+        <!-- Selection Status Banner -->
+        <div class="{% if score >= 6 %}bg-gradient-to-r from-green-500 to-emerald-600
+                    {% else %}bg-gradient-to-r from-yellow-500 to-orange-600{% endif %} 
+                    rounded-t-2xl p-8 shadow-lg text-white relative overflow-hidden
+                    border border-white/20 backdrop-blur-sm">
+            <!-- Animated background patterns -->
+            <div class="absolute inset-0 bg-grid-white/[0.1]"></div>
+            <div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
+            
+            <div class="absolute top-0 right-0 w-64 h-64 opacity-10">
+                {% if score >= 7 %}
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M8.4 5.3c.2-.9 1-1.6 1.9-1.6h3.4c.9 0 1.7.7 1.9 1.6l.3 1.4h2.8c1.1 0 2 .9 2 2v11c0 1.1-.9 2-2 2H5.3c-1.1 0-2-.9-2-2v-11c0-1.1.9-2 2-2h2.8l.3-1.4zM12 16c2.2 0 4-1.8 4-4s-1.8-4-4-4-4 1.8-4 4 1.8 4 4 4z"/>
+                </svg>
+                {% else %}
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 2c5.5 0 10 4.5 10 10s-4.5 10-10 10S2 17.5 2 12 6.5 2 12 2zm0 18c4.4 0 8-3.6 8-8s-3.6-8-8-8-8 3.6-8 8 3.6 8 8 8zm-1-13h2v6h-2V7zm0 8h2v2h-2v-2z"/>
+                </svg>
+                {% endif %}
+            </div>
+            
+            <!-- Selection Status Badge -->
+            <div class="absolute top-4 right-4">
+                {% if score >= 6 %}
+                <div class="bg-green-400/30 border border-white/30 rounded-full px-4 py-2 flex items-center gap-2 animate-pulse">
+                    <span class="w-2 h-2 bg-white rounded-full"></span>
+                    <span class="font-semibold">Selected for Next Round</span>
+                </div>
+                {% else %}
+                <div class="bg-red-500/30 border border-white/30 rounded-full px-4 py-2 flex items-center gap-2">
+                    <span class="w-2 h-2 bg-white rounded-full"></span>
+                    <span class="font-semibold">Not Selected</span>
+                </div>
+                {% endif %}
+            </div>
+            
+            <div class="relative">
+                {% if score >= 6 %}
+                <div class="inline-block px-4 py-2 bg-green-400/20 rounded-full text-sm font-semibold mb-4">
+                    Congratulations on Being Selected! 🎉
+                </div>
+                {% else %}
+                <div class="inline-block px-4 py-2 bg-yellow-400/20 rounded-full text-sm font-semibold mb-4">
+                    Thank You for Participating 💪
+                </div>
+                {% endif %}
+                <h2 class="text-4xl font-bold mb-4">
+                    {% if score >= 6 %}
+                    You've Made it to the Next Round!
+                    {% else %}
+                    Better Luck Next Time
+                    {% endif %}
+                </h2>
+                <p class="text-lg opacity-90">
+                    {% if score >= 6 %}
+                    Your performance has qualified you for the next round of interviews. We'll be in touch with next steps.
+                    {% else %}
+                    While you didn't qualify this time, we encourage you to continue practicing and try again.
+                    {% endif %}
+                </p>
+                
+                <!-- Next Steps -->
+                <div class="mt-6 text-sm">
+                    {% if score >= 6 %}
+                    <p class="flex items-center gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" 
+                             fill="none" stroke="currentColor" stroke-width="2" class="shrink-0">
+                            <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/>
+                            <path d="m9 12 2 2 4-4"/>
+                        </svg>
+                        Next round details will be sent to your email
+                    </p>
+                    {% else %}
+                    <p class="flex items-center gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" 
+                             fill="none" stroke="currentColor" stroke-width="2" class="shrink-0">
+                            <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/>
+                            <path d="M12 8v4"/>
+                            <path d="M12 16h.01"/>
+                        </svg>
+                        You can attempt another mock interview after 24 hours
+                    </p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Score Card -->
+        <div class="bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-b-2xl p-8 shadow-lg mb-8 
+                    border-x border-b border-gray-200/50 dark:border-gray-700/50
+                    transform transition-all duration-500 hover:shadow-xl">
+            <!-- Score section with enhanced animation -->
+            <div class="flex items-center gap-8">
+                <div class="w-36 h-36 rounded-full flex items-center justify-center relative
+                            {% if score >= 7 %}bg-green-100 text-green-600
+                            {% elif score >= 5 %}bg-yellow-100 text-yellow-600
+                            {% else %}bg-red-100 text-red-600{% endif %}
+                            before:absolute before:inset-0 before:border-4 
+                            before:border-current before:rounded-full before:animate-pulse
+                            after:absolute after:inset-[-5px] after:border-2
+                            after:border-current/30 after:rounded-full after:animate-ping">
+                    <span class="text-4xl font-bold">{{ score }}/10</span>
+                </div>
+                <div class="flex-1">
+                    <div class="flex gap-2 mb-2">
+                        {% for score in question_scores %}
+                        <div onclick="showQuestionDetails({{ forloop.counter0 }})"
+                             class="w-8 h-1 rounded-full cursor-pointer transition-all duration-300
+                             {% if score.score >= 1.5 %}bg-green-500 hover:bg-green-600
+                             {% elif score.score >= 1.0 %}bg-yellow-500 hover:bg-yellow-600
+                             {% else %}bg-red-500 hover:bg-red-600{% endif %}">
+                        </div>
+                        {% endfor %}
+                    </div>
+                    <p class="text-gray-600 dark:text-gray-400">
+                        {% if score >= 7 %}
+                        <span class="text-green-600 font-semibold block mb-2">Selected ✨</span>
+                        Excellent performance! You demonstrated strong knowledge and communication skills.
+                        {% elif score >= 5 %}
+                        <span class="text-yellow-600 font-semibold block mb-2">Waitlisted 📋</span>
+                        Good job! You're close to the mark. Focus on improving specific areas.
+                        {% else %}
+                        <span class="text-red-600 font-semibold block mb-2">Needs Improvement 📚</span>
+                        Keep practicing! Focus on improving your responses and communication clarity.
+                        {% endif %}
+                    </p>
+                </div>
+            </div>
+            <!-- Selection Status Details -->
+            <div class="mt-6 p-6 {% if score >= 7 %}bg-green-50 border-green-100{% else %}bg-yellow-50 border-yellow-100{% endif %} 
+                        border rounded-lg shadow-sm">
+                <h4 class="font-semibold mb-4 text-lg flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" 
+                         fill="none" stroke="currentColor" stroke-width="2" 
+                         class="{% if score >= 7 %}text-green-600{% else %}text-yellow-600{% endif %}">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                        <path d="M14 2v6h6"/>
+                        <path d="M16 13H8"/>
+                        <path d="M16 17H8"/>
+                        <path d="M10 9H8"/>
+                    </svg>
+                    Detailed Interview Analysis
+                </h4>
+
+                <div class="space-y-6">
+                    <!-- Technical Knowledge -->
+                    <div>
+                        <h5 class="font-medium mb-2 text-gray-700">Technical Proficiency:</h5>
+                        <ul class="list-disc list-inside space-y-2 text-sm text-gray-600">
+                            {% if score >= 7 %}
+                            <li>Demonstrated strong understanding of {{ interview.job_position }} concepts</li>
+                            <li>Successfully explained technical solutions with clarity</li>
+                            <li>Showed good knowledge of {{ interview.job_desc }}</li>
+                            {% else %}
+                            <li>Review core concepts related to {{ interview.job_position }}</li>
+                            <li>Practice explaining technical concepts more clearly</li>
+                            <li>Focus on strengthening knowledge in {{ interview.job_desc }}</li>
+                            {% endif %}
+                        </ul>
+                    </div>
+
+                    <!-- Communication Skills -->
+                    <div>
+                        <h5 class="font-medium mb-2 text-gray-700">Communication Assessment:</h5>
+                        <ul class="list-disc list-inside space-y-2 text-sm text-gray-600">
+                            {% if face_analysis and face_analysis.score >= 1.5 %}
+                            <li>Maintained good eye contact and professional demeanor</li>
+                            <li>Demonstrated confident body language</li>
+                            <li>Showed appropriate facial expressions during responses</li>
+                            {% else %}
+                            <li>Work on maintaining consistent eye contact with the camera</li>
+                            <li>Practice more confident body language and posture</li>
+                            <li>Focus on appearing more engaged during responses</li>
+                            {% endif %}
+                        </ul>
+                    </div>
+
+                    <!-- Answer Structure -->
+                    <div>
+                        <h5 class="font-medium mb-2 text-gray-700">Response Structure:</h5>
+                        <ul class="list-disc list-inside space-y-2 text-sm text-gray-600">
+                            {% for score in question_scores %}
+                            {% if score.score >= 1.5 %}
+                            <li>Q{{ forloop.counter }}: Well-structured response with clear examples</li>
+                            {% elif score.score >= 1.0 %}
+                            <li>Q{{ forloop.counter }}: Good points but needs better organization</li>
+                            {% else %}
+                            <li>Q{{ forloop.counter }}: Review STAR method for more structured response</li>
+                            {% endif %}
+                            {% endfor %}
+                        </ul>
+                    </div>
+
+                    <!-- Areas for Improvement -->
+                    <div>
+                        <h5 class="font-medium mb-2 text-gray-700">Improvement Areas:</h5>
+                        <ul class="list-disc list-inside space-y-2 text-sm text-gray-600">
+                            {% for score in question_scores %}
+                            {% if score.score < 1.5 %}
+                            <li>{{ score.question|truncatechars:50 }}: 
+                                {% if score.score < 1.0 %}
+                                Need significant improvement in technical accuracy and detail
+                                {% else %}
+                                Good foundation, focus on adding more specific examples
+                                {% endif %}
+                            </li>
+                            {% endif %}
+                            {% endfor %}
+                        </ul>
+                    </div>
+
+                    <!-- Next Steps -->
+                    <div class="mt-4 p-4 {% if score >= 7 %}bg-green-100{% else %}bg-yellow-100{% endif %} rounded-lg">
+                        <h5 class="font-medium mb-2">Recommended Next Steps:</h5>
+                        <ul class="list-disc list-inside space-y-2 text-sm">
+                            {% if score >= 7 %}
+                            <li>Prepare for more advanced technical questions</li>
+                            <li>Review system design concepts for next round</li>
+                            <li>Research company-specific technologies</li>
+                            {% else %}
+                            <li>Practice with more {{ interview.job_position }} mock interviews</li>
+                            <li>Focus on {{ interview.job_desc }} practical implementations</li>
+                            <li>Review interview recordings to improve communication</li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Analysis Sections -->
+        {% if face_analysis %}
+        <div class="bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-2xl p-8 shadow-lg mb-8 
+                    border border-gray-200/50 dark:border-gray-700/50 transform transition-all duration-500 
+                    hover:shadow-xl">
+            <h3 class="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-6 flex items-center gap-3">
+                <span class="p-2 bg-blue-100 dark:bg-blue-900/50 rounded-lg">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" 
+                        fill="none" stroke="currentColor" stroke-width="2" 
+                        class="text-blue-600 dark:text-blue-400">
+                        <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/>
+                        <circle cx="12" cy="12" r="3"/>
+                    </svg>
+                </span>
+                Presentation Analysis
+            </h3>
+            <!-- Analysis grid with enhanced cards -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {% for metric, value in face_analysis.items %}
+                <div class="p-6 bg-gray-50/50 dark:bg-gray-700/30 rounded-xl border border-gray-200/50
+                            transform transition-all duration-300 hover:scale-[1.02] hover:shadow-lg
+                            hover:bg-gray-50/80 dark:hover:bg-gray-700/50">
+                    <h4 class="font-medium text-gray-600 dark:text-gray-300 mb-2">{{ metric }}</h4>
+                    <div class="flex items-center gap-3">
+                        <div class="w-16 h-16 rounded-full flex items-center justify-center
+                                  {% if value >= 70 %}bg-green-100 text-green-600
+                                  {% else %}bg-yellow-100 text-yellow-600{% endif %}">
+                            {{ value }}%
+                        </div>
+                        <div class="flex-1">
+                            <div class="w-full bg-gray-200 rounded-full h-2.5">
+                                <div class="{% if value >= 70 %}bg-green-600{% else %}bg-yellow-600{% endif %} 
+                                            h-2.5 rounded-full transition-all duration-500"
+                                     style="width: {{ value }}%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+        
+        <!-- Action Items -->
+        <div class="bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-2xl p-8 shadow-lg 
+                    border border-gray-200/50 dark:border-gray-700/50">
+            <h3 class="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-6 flex items-center gap-3">
+                <span class="p-2 bg-purple-100 dark:bg-purple-900/50 rounded-lg">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" 
+                        fill="none" stroke="currentColor" stroke-width="2"
+                        class="text-purple-600 dark:text-purple-400">
+                        <path d="M12 20h9"/>
+                        <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+                    </svg>
+                </span>
+                Next Steps
+            </h3>
+            <!-- Enhanced action items - removed the first card and made the second card full width -->
+            <div class="grid grid-cols-1 gap-6">
+                <a href="/dashboard" class="block">
+                    <div class="p-6 bg-gradient-to-br from-purple-50 to-purple-100/50
+                                dark:from-purple-900/30 dark:to-purple-800/30 rounded-xl border border-purple-200/50
+                                transform transition-all duration-300 hover:shadow-lg hover:scale-105 cursor-pointer">
+                        <div class="flex items-start gap-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" 
+                                 fill="none" stroke="currentColor" stroke-width="2" class="text-purple-600">
+                                <path d="M12 20h9"/>
+                                <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+                            </svg>
+                            <p class="text-purple-800 dark:text-purple-200">Take another mock interview to improve your score</p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+        
+        <!-- Return to Dashboard Button -->
+        <div class="mt-8 text-center">
+            <a href="/" class="inline-flex items-center gap-2 px-6 py-3 bg-gray-900 dark:bg-gray-700 
+                                      text-white rounded-full hover:bg-gray-800 dark:hover:bg-gray-600 
+                                      transition-all duration-300 hover:shadow-lg group">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" 
+                     fill="none" stroke="currentColor" stroke-width="2" 
+                     class="transform transition-transform group-hover:-translate-x-1">
+                    <path d="m15 18-6-6 6-6"/>
+                </svg>
+                Return to Home
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Question Details Modal -->
+<div id="questionModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm hidden z-50">
+    <div class="min-h-screen flex items-center justify-center p-4">
+        <div class="bg-white dark:bg-gray-800 rounded-xl max-w-3xl w-full max-h-[80vh] overflow-y-auto">
+            <!-- Modal Header -->
+            <div class="p-6 border-b border-gray-200 dark:border-gray-700 sticky top-0 bg-white dark:bg-gray-800 z-10">
+                <div class="flex justify-between items-center">
+                    <h3 class="text-xl font-semibold">Question Details</h3>
+                    <button onclick="closeModal()" class="text-gray-500 hover:text-gray-700">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" 
+                             fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M18 6L6 18"></path>
+                            <path d="M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Modal Content -->
+            <div class="p-6 space-y-6">
+                <div id="modalContent"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    !function(){try{var d=document.documentElement,c=d.classList;c.remove('light','dark');
+    var e=localStorage.getItem('theme');if('system'===e||(!e&&false)){
+        var t='(prefers-color-scheme: dark)',m=window.matchMedia(t);
+        if(m.media!==t||m.matches){d.style.colorScheme = 'dark';c.add('dark')}
+        else{d.style.colorScheme = 'light';c.add('light')}}
+        else if(e){c.add(e|| '')}else{c.add('white')}
+        if(e==='light'||e==='dark')d.style.colorScheme=e}catch(e){}}();
+
+    const questionScores = [
+        {% for score in question_scores %}
+        {
+            question: `{{ score.question|escapejs }}`,
+            userAnswer: `{{ score.user_answer|escapejs }}`,
+            expectedAnswer: `{{ score.correct_answer|escapejs }}`,
+            score: {{ score.score }},
+            feedback: `{{ score.feedback|escapejs }}`
+        },
+        {% endfor %}
+    ];
+
+    function showQuestionDetails(index) {
+        const score = questionScores[index];
+        const modal = document.getElementById('questionModal');
+        const content = document.getElementById('modalContent');
+        
+        content.innerHTML = `
+            <div class="space-y-6">
+                <!-- Question -->
+                <div>
+                    <h4 class="text-lg font-medium mb-2">Question ${index + 1}</h4>
+                    <p class="text-gray-600 dark:text-gray-400">${score.question}</p>
+                </div>
+                
+                <!-- Your Answer -->
+                <div>
+                    <h4 class="text-lg font-medium mb-2 flex items-center gap-2">
+                        Your Answer
+                        <span class="text-sm px-2 py-1 rounded-full 
+                                   ${score.score >= 1.5 ? 'bg-green-100 text-green-700' : 
+                                     score.score >= 1.0 ? 'bg-yellow-100 text-yellow-700' : 
+                                     'bg-red-100 text-red-700'}">
+                            Score: ${score.score}/2
+                        </span>
+                    </h4>
+                    <p class="text-gray-600 dark:text-gray-400">${score.userAnswer || 'No answer provided'}</p>
+                </div>
+                
+                <!-- Expected Answer -->
+                <div>
+                    <h4 class="text-lg font-medium mb-2">Expected Answer</h4>
+                    <p class="text-gray-600 dark:text-gray-400">${score.expectedAnswer}</p>
+                </div>
+                
+                <!-- Feedback -->
+                <div class="p-4 ${score.score >= 1.5 ? 'bg-green-50' : 
+                                 score.score >= 1.0 ? 'bg-yellow-50' : 
+                                 'bg-red-50'} rounded-lg">
+                    <h4 class="font-medium mb-2">Feedback</h4>
+                    <p class="text-sm">${score.feedback}</p>
+                </div>
+            </div>
+        `;
+        
+        modal.classList.remove('hidden');
+    }
+
+    function closeModal() {
+        document.getElementById('questionModal').classList.add('hidden');
+    }
+
+    // Close modal when clicking outside
+    document.getElementById('questionModal').addEventListener('click', (e) => {
+        if (e.target === e.currentTarget) {
+            closeModal();
+        }
+    });
+</script>
+{% endblock %} 
